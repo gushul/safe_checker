@@ -7,4 +7,5 @@ loader.setup
 
 module SafeCracker
   class Error < StandardError; end
+  class ValidationError < StandardError; end
 end

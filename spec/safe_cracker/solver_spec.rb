@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+
 RSpec.describe SafeCracker::Solver do
-  describe '#solve' do
+  describe '#call' do
     context 'with examples from task' do
       let(:initial_state) { [0, 0, 0] }
       let(:target_state) { [1, 1, 1] }

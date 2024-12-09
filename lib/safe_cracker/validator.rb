@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module SafeCracker
-  class ValidationError < StandardError; end
-
   class Validator
     class << self
       def validate_n(handles_count)

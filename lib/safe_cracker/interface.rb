@@ -4,10 +4,10 @@ module SafeCracker
   class Interface
     class << self
       def run # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-        read_hadles_count
-        initial_state = read_state(n, 'beginning state')
-        target_state = read_state(n, 'target state')
-        restricted_combinations = read_restricted_combinations(n)
+        handles_count = read_handles_count
+        initial_state = read_state(handles_count , 'beginning state')
+        target_state = read_state(handles_count , 'target state')
+        restricted_combinations = read_restricted_combinations(handles_count)
 
         solver = Solver.new(initial_state, target_state, restricted_combinations)
         solution = solver.call
@@ -18,7 +18,7 @@ module SafeCracker
         else
           puts "\nSolution not exists!"
         end
-      rescue ValidationError => e
+      rescue SafeCracker::ValidationError  => e
         puts "\nValidation error: #{e.message}"
         retry
       rescue Interrupt
@@ -31,11 +31,11 @@ module SafeCracker
 
       private
 
-      def read_hadles_count
+      def read_handles_count
         loop do
           print 'Enter handles count (number of dials, 1-6): '
           input = $stdin.gets.to_i
-          Validator.validate_n(input)
+          SafeCracker::Validator.validate_n(input)
           return input
         rescue ValidationError => e
           puts e.message
@@ -48,7 +48,7 @@ module SafeCracker
           input = $stdin.gets.split.map(&:to_i)
           Validator.validate_state(input, handles_count)
           return input
-        rescue ValidationError => e
+        rescue SafeCracker::ValidationError => e
           puts e.message
         end
       end
@@ -64,17 +64,17 @@ module SafeCracker
             loop do
               print "Enter restricted combination #{i + 1} (#{handles_count} digits separated by space): "
               combination = $stdin.gets.split.map(&:to_i)
-              Validator.validate_state(combination, n)
+              Validator.validate_state(combination, handles_count)
               combinations << combination
               break
-            rescue ValidationError => e
+            rescue SafeCracker::ValidationError => e
               puts e.message
             end
           end
 
           Validator.validate_unique_combinations(combinations)
           return combinations
-        rescue ValidationError => e
+        rescue SafeCracker::ValidationError => e
           puts e.message
           combinations = []
         end
