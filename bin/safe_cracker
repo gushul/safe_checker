@@ -4,3 +4,4 @@
 require_relative '../lib/safe_cracker'
 
 SafeCracker::Interface.run
+

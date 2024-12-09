@@ -2,7 +2,7 @@
 
 module SafeCracker
   class Solver
-    attr_accessor :n, :restricted_combinations, :target_state, :initial_state
+    attr_accessor :handles_count, :restricted_combinations, :target_state, :initial_state
 
     # @param initial_state [Array<Integer>] Starting combination of the safe
     # @param target_state [Array<Integer>] Target combination to reach
@@ -12,12 +12,12 @@ module SafeCracker
       @initial_state = initial_state
       @target_state = target_state
       @restricted_combinations = restricted_combinations
-      @n = initial_state.length
+      @handles_count = initial_state.length
     end
 
     # Finds the shortest path from initial to target state
     # @return [Array<Array<Integer>>] Array of states from initial to target, or nil if no solution
-    def solve
+    def call # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       return nil if restricted?(initial_state) || restricted?(target_state)
 
       visited = { initial_state => nil }
@@ -42,27 +42,16 @@ module SafeCracker
     private
 
     def next_states(state)
-      states = []
-
-      n.times do |i|
-        up_value = (state[i] + 1) % 10
-        down_value = (state[i] - 1) % 10
-        down_value = 9 if state[i] == 0
-
-        new_state_up = state.dup
-        new_state_up[i] = up_value
-        states << new_state_up
-
-        new_state_down = state.dup
-        new_state_down[i] = down_value
-        states << new_state_down
+      (0...handles_count).flat_map do |i|
+        [
+          state.dup.tap { |s| s[i] = (s[i] + 1) % 10 },
+          state.dup.tap { |s| s[i] = ((s[i] - 1) % 10) + (10 % 10) }
+        ]
       end
-
-      states
     end
 
     def restricted?(state)
-      restricted_combinations.any? { |combo| combo == state }
+      restricted_combinations.any?(state)
     end
 
     def build_path(visited, current_state)

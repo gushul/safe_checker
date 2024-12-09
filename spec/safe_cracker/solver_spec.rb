@@ -9,13 +9,12 @@ RSpec.describe SafeCracker::Solver do
       let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
       it 'find correct solution' do
-        solution = solver.solve
-        expect(solution).to eq([
-                                 [0, 0, 0],
-                                 [0, 1, 0],
-                                 [1, 1, 0],
-                                 [1, 1, 1]
-                               ])
+        expect(solver.call).to eq([
+                                    [0, 0, 0],
+                                    [0, 1, 0],
+                                    [1, 1, 0],
+                                    [1, 1, 1]
+                                  ])
       end
     end
 
@@ -26,15 +25,15 @@ RSpec.describe SafeCracker::Solver do
       let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
       it 'finds shortest valid solution avoiding restricted combinations' do
-        expect(solver.solve).to eq([
-                                     [0, 0],
-                                     [9, 0],
-                                     [9, 1],
-                                     [9, 2],
-                                     [0, 2],
-                                     [1, 2],
-                                     [1, 1]
-                                   ])
+        expect(solver.call).to eq([
+                                    [0, 0],
+                                    [9, 0],
+                                    [9, 1],
+                                    [9, 2],
+                                    [0, 2],
+                                    [1, 2],
+                                    [1, 1]
+                                  ])
       end
     end
 
@@ -46,7 +45,7 @@ RSpec.describe SafeCracker::Solver do
         let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
         it 'returns nil' do
-          expect(solver.solve).to be_nil
+          expect(solver.call).to be_nil
         end
       end
 
@@ -57,7 +56,7 @@ RSpec.describe SafeCracker::Solver do
         let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
         it 'returns nil' do
-          expect(solver.solve).to be_nil
+          expect(solver.call).to be_nil
         end
       end
 
@@ -68,7 +67,7 @@ RSpec.describe SafeCracker::Solver do
         let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
         it 'returns nil' do
-          expect(solver.solve).to be_nil
+          expect(solver.call).to be_nil
         end
       end
     end
@@ -81,7 +80,7 @@ RSpec.describe SafeCracker::Solver do
         let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
         it 'finds path avoiding restricted state' do
-          solution = solver.solve
+          solution = solver.call
           expect(solution).not_to be_nil
           expect(solution).not_to include([5])
           expect(solution.first).to eq([0])
@@ -96,7 +95,7 @@ RSpec.describe SafeCracker::Solver do
         let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
         it 'finds correct path crossing boundary' do
-          solution = solver.solve
+          solution = solver.call
           expect(solution).not_to be_nil
           expect(solution).not_to include([9, 0])
           expect(solution).not_to include([0, 9])
@@ -104,14 +103,14 @@ RSpec.describe SafeCracker::Solver do
       end
     end
 
-    context 'path validity' do
+    describe 'path validity' do
       let(:initial_state) { [0, 0] }
       let(:target_state) { [1, 1] }
       let(:restricted_combinations) { [[0, 1]] }
       let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
       it 'changes only one digit at a time' do
-        solution = solver.solve
+        solution = solver.call
         return if solution.nil?
 
         solution.each_cons(2) do |current, next_state|
@@ -122,7 +121,7 @@ RSpec.describe SafeCracker::Solver do
       end
 
       it 'changes digits only by +1 or -1' do
-        solution = solver.solve
+        solution = solver.call
         return if solution.nil?
 
         solution.each_cons(2) do |current, next_state|
@@ -137,7 +136,7 @@ RSpec.describe SafeCracker::Solver do
       end
 
       it 'avoids restricted combinations' do
-        solution = solver.solve
+        solution = solver.call
         return if solution.nil?
 
         restricted_combinations.each do |restricted|
@@ -154,7 +153,7 @@ RSpec.describe SafeCracker::Solver do
       let(:solver) { described_class.new(initial_state, target_state, restricted_combinations) }
 
       it 'finds solution for maximum N' do
-        solution = solver.solve
+        solution = solver.call
         expect(solution).not_to be_nil
         expect(solution.first).to eq(initial_state)
         expect(solution.last).to eq(target_state)
