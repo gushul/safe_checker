@@ -18,7 +18,7 @@ RSpec.describe SafeCracker::Interface, :last do
 
       expect { described_class.run }.to output(/Solution finded:/).to_stdout
     ensure
-      $stdin = STDIN 
+      $stdin = STDIN
     end
   end
 end

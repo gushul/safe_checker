@@ -5,8 +5,8 @@ module SafeCracker
     class << self
       def run # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         handles_count = read_handles_count
-        initial_state = read_state(handles_count , 'beginning state')
-        target_state = read_state(handles_count , 'target state')
+        initial_state = read_state(handles_count, 'beginning state')
+        target_state = read_state(handles_count, 'target state')
         restricted_combinations = read_restricted_combinations(handles_count)
 
         solver = Solver.new(initial_state, target_state, restricted_combinations)
@@ -18,7 +18,7 @@ module SafeCracker
         else
           puts "\nSolution not exists!"
         end
-      rescue SafeCracker::ValidationError  => e
+      rescue SafeCracker::ValidationError => e
         puts "\nValidation error: #{e.message}"
         retry
       rescue Interrupt

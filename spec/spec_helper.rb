@@ -11,7 +11,6 @@ RSpec.configure do |config|
     other_tests + last_tests
   end
 
-
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
@@ -30,4 +29,3 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 end
-
